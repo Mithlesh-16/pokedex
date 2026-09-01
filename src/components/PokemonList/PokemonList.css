@@ -1,0 +1,27 @@
+.pokemon-list-wrapper{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    margin: 2rem 0;
+}
+
+.Pokemon-wrapper{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 2rem 0;
+    gap: 1rem;
+}
+
+.pagination-wrapper{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 0;
+    margin-left: 1rem;
+}
