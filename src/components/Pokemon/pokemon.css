@@ -10,6 +10,12 @@
     width: 10rem;
     height: 10rem;
     object-fit: cover;
+    margin: 1rem 0;
+}
+
+.pokemon-image:hover, .pokemon-image:focus, .pokemon-name:hover, .pokemon-name:focus{
+    transform: scale(1.1);
+    transition: all 0.05s ease-in-out;
 }
 
 .pokemon-name{
@@ -19,4 +25,12 @@
     text-align: center;
     letter-spacing: 0.5rem;
     text-transform: capitalize;
+}
+
+a:visited{
+    color: inherit;
+}
+a{
+    text-decoration: none;
+    color: inherit;
 }
