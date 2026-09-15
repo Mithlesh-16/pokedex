@@ -5,12 +5,6 @@ import './PokemonDetails.css';
 
 function PokemonDetails(){
     let {id} = useParams();
-    // const [pokemon, setPokemon] = useState(null);
-    // const [previousUrl, setPreviousUrl] = useState("");
-    // const [nextUrl, setNextUrl] = useState("");
-    // const [url, setUrl] = useState(`https://pokeapi.co/api/v2/pokemon/${id}`);
-    // const [pokemonId, setPokemonId] = useState(id);
-
     const [pokemonListState, setPokemonListState] = useState({
         pokemon: null,
         previousUrl: "", 
@@ -35,13 +29,6 @@ function PokemonDetails(){
             nextUrl: `https://pokeapi.co/api/v2/pokemon/${id+1}`,
         }))
         console.log(response.data);
-        // setPokemon({
-        //     name: response.data.name,
-        //     image: response.data.sprites.other['official-artwork'].front_default,
-        //     height: response.data.height,
-        //     weight: response.data.weight,
-        //     type: response.data.types.map((t) => t.type.name)
-        // })
      }
     useEffect(() => {
         downloadPokemon();
