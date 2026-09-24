@@ -1,0 +1,213 @@
+/* =========================================
+   POKEMON CARD
+========================================= */
+
+.pokemon-wrapper {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+
+    flex-basis: 20%;
+
+    min-height: 280px;
+
+    justify-content: center;
+    align-items: center;
+
+    padding: 1rem;
+
+    box-sizing: border-box;
+
+    /* background: rgba(30, 41, 59, 0.85); */
+
+    border: 1px solid rgba(255, 255, 255, 0.06);
+
+    border-radius: 2rem;
+
+    backdrop-filter: blur(10px);
+
+    overflow: hidden;
+
+    cursor: pointer;
+}
+
+
+/* =========================================
+   BACKGROUND CIRCLE
+========================================= */
+
+.pokemon-wrapper::before {
+    content: "";
+
+    position: absolute;
+
+    width: 210px;
+    height: 210px;
+
+    top: 46%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.035);
+}
+
+
+/* =========================================
+   POKEMON IMAGE
+========================================= */
+
+.pokemon-image {
+    position: relative;
+
+    z-index: 2;
+
+    width: 200px;
+    height: 200px;
+
+    object-fit: contain;
+
+    margin: 0;
+
+    filter:
+        drop-shadow(
+            0 15px 15px rgba(0, 0, 0, 0.3)
+        );
+
+    transition:
+        transform 0.3s ease,
+        filter 0.3s ease;
+}
+
+.pokemon-wrapper:hover .pokemon-name {
+    transform: translateY(-2px);
+}
+
+/* =========================================
+   IMAGE HOVER ONLY
+========================================= */
+
+.pokemon-image:hover {
+    transform: scale(1.08);
+
+    filter:
+        drop-shadow(
+            0 20px 20px rgba(0, 0, 0, 0.4)
+        );
+}
+
+
+/* =========================================
+   POKEMON ID
+========================================= */
+
+.pokemon-id {
+    position: absolute;
+
+    top: 14px;
+    right: 14px;
+
+    z-index: 3;
+
+    margin: 0;
+
+    padding: 0.3rem 0.65rem;
+
+    border-radius: 999px;
+
+    background: rgba(255, 255, 255, 0.08);
+
+    border: 1px solid rgba(255, 255, 255, 0.06);
+
+    font-size: 0.75rem;
+
+    font-weight: 700;
+
+    letter-spacing: 2px;
+
+    opacity: 0.65;
+}
+
+
+/* =========================================
+   POKEMON NAME
+========================================= */
+
+.pokemon-name {
+    position: relative;
+
+    z-index: 3;
+
+    margin: 0.2rem 0 0;
+
+    font-size: 1rem;
+
+    font-family:
+        "Courier New",
+        Courier,
+        monospace;
+
+    font-weight: bold;
+
+    text-align: center;
+
+    letter-spacing: 0.25rem;
+
+    text-transform: capitalize;
+}
+
+
+/* =========================================
+   LINKS
+========================================= */
+
+a {
+    color: inherit;
+
+    text-decoration: none;
+}
+
+a:visited {
+    color: inherit;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 1000px) {
+
+    .pokemon-wrapper {
+        flex-basis: 30%;
+    }
+
+}
+
+
+@media (max-width: 700px) {
+
+    .pokemon-wrapper {
+        flex-basis: 45%;
+    }
+
+}
+
+
+@media (max-width: 500px) {
+
+    .pokemon-wrapper {
+        flex-basis: 100%;
+
+        min-height: 300px;
+    }
+
+    .pokemon-image {
+        width: 220px;
+        height: 220px;
+    }
+
+}

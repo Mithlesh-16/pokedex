@@ -1,0 +1,23 @@
+body {
+  min-height: 100vh;
+  background:
+    linear-gradient(
+      135deg,
+      #020617 0%,
+      #030712 50%,
+      #000000 100%
+    );
+  color: white;
+}
+
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}

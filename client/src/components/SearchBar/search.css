@@ -1,0 +1,32 @@
+/* 
+.search-wrapper{
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    
+} */
+
+.search-input input{
+  display: flex;
+  width: 500px;
+  justify-content: center;
+  margin: 0 auto;
+  background: rgba(30,41,59,.9);
+
+  border: 1px solid rgba(255,255,255,.08);
+
+  color: white;
+
+  padding: 16px 20px;
+
+  border-radius: 16px;
+
+  outline: none;
+}
+
+.search-input:focus-within input {
+  border-color: #3b82f6;
+  box-shadow:
+    0 0 0 4px rgba(59,130,246,.15);
+}
