@@ -7,7 +7,6 @@ import Error from '../Error/Error.jsx';
 function PokemonList() {
     const {pokemonListState, setPokemonListState} = usePokemonList();
     const {pokemonList, isLoading, url, nextUrl, prevUrl,error} = pokemonListState;
-    console.log(pokemonListState.isLoading);
     if(isLoading){
         return <Loader/>;
     }
@@ -19,6 +18,7 @@ function PokemonList() {
             />
         );
     }
+    console.log("PokemonList : ", pokemonListState.id);
     return (
         <>
         <div className = "pokemon-list-wrapper">

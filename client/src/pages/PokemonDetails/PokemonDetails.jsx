@@ -9,7 +9,7 @@ function PokemonDetails(){
     console.log(id);
     const [pokemonList, setPokemonList] = useState({
         pokemon: null,
-        currId: id,
+        currId: Number(id),
     })
     let url = `https://pokeapi.co/api/v2/pokemon/${pokemonList.currId}`;
 
@@ -38,7 +38,6 @@ function PokemonDetails(){
     },[pokemonList.currId]);
 
     return <>
-    
     <PokemonInfo pokemon = {pokemonList.pokemon}/>
 
     <div className = "pagination-wrapper">
