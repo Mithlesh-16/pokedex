@@ -156,6 +156,15 @@
     border-radius: 20px;
 }
 
+.favorite-button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
 .add-to-favorites {
     font-size: 1.5rem;
     cursor: pointer;

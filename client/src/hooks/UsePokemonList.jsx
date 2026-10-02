@@ -2,7 +2,7 @@ import {useState, useEffect} from "react";
 import axios from "axios";
 
 function usePokemonList(){
-    const [pokemonListState,        setPokemonListState] = useState({
+    const [pokemonListState, setPokemonListState] = useState({
         pokemonList:[],
         isLoading: true,
         url:"https://pokeapi.co/api/v2/pokemon?limit=20&offset=0",

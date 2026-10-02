@@ -32,6 +32,98 @@
     cursor: pointer;
 }
 
+/* =========================================
+   FAVORITE BUTTON
+========================================= */
+
+.favorite-btn{
+    position: absolute;
+
+    top: 18px;
+    left: 18px;
+
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border: none;
+    border-radius: 50%;
+
+    background: rgba(255,255,255,0.08);
+
+    backdrop-filter: blur(10px);
+
+    cursor: pointer;
+
+    z-index: 5;
+
+    opacity: 0;
+
+    transform: translateY(10px);
+
+    transition:
+        opacity 0.25s ease,
+        transform 0.25s ease,
+        background 0.25s ease;
+}
+
+.pokemon-wrapper:hover .favorite-btn{
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.favorite-btn:hover{
+    background: rgba(255,255,255,0.15);
+}
+
+/* =========================================
+   HEART ICONS
+========================================= */
+
+.heart-filled{
+    font-size: 1.2rem;
+
+    color: #ff4d6d;
+
+    animation: heartPop 0.25s ease;
+}
+
+.heart-empty{
+    font-size: 1.2rem;
+
+    color: rgba(255,255,255,0.85);
+
+    transition:
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.favorite-btn:hover .heart-empty{
+    color: #ff4d6d;
+    transform: scale(1.15);
+}
+
+/* =========================================
+   HEART POP ANIMATION
+========================================= */
+
+@keyframes heartPop{
+
+    0%{
+        transform: scale(0.7);
+    }
+
+    50%{
+        transform: scale(1.3);
+    }
+
+    100%{
+        transform: scale(1);
+    }
+}
 
 /* =========================================
    BACKGROUND CIRCLE

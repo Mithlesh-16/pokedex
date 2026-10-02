@@ -23,7 +23,7 @@ function PokemonList() {
         <>
         <div className = "pokemon-list-wrapper">
             <div className='Pokemon-wrapper'>  
-                {pokemonList.map((p) => <Pokemon name = {p.name} image = {p.image} id = {p.id} key = {p.id} types = {p.types} moves={p.moves} abilities={p.abilities} stats={p.stats} species={p.species}/>)}
+                {pokemonList.map((p) => <Pokemon pokemon={p} key={p.id}/>)}
             </div>
 
             <div className = "pagination-wrapper">

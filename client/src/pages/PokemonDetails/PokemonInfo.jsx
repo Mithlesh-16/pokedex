@@ -1,5 +1,6 @@
 import "./PokemonInfo.css";
-import { addToFavorites } from "../Favorites/Favorites.jsx";
+import {useFavorites} from '../../hooks/useFavorites.js';
+import {FaHeart, FaRegHeart} from 'react-icons/fa';
 
 function PokemonInfo({ pokemon }) {
 
@@ -11,6 +12,8 @@ function PokemonInfo({ pokemon }) {
             .map(word => word.charAt(0).toUpperCase() + word.slice(1))
             .join(" ");
     }
+
+    const {isFavorite, toggleFavorite} = useFavorites();
 
     return (
         <div className="pokemon-info">
@@ -44,7 +47,11 @@ function PokemonInfo({ pokemon }) {
                         <h1 className="pokemon-info-name">
                         {formatName(pokemon?.name)}
                         </h1>
-                        <span className="add-to-favorites" onClick={() => addToFavorites(pokemon)}>❤️</span>
+                        <button className="favorite-button" onClick={() => toggleFavorite(pokemon)}>
+                            {
+                            isFavorite(pokemon?.id) ? <FaHeart className = "heart-filled"/> : <FaRegHeart className = "heart-empty"/>
+                            }
+                        </button>
                     </div>
                     
 
