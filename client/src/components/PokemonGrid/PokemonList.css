@@ -1,28 +1,398 @@
-.pokemon-list-wrapper{
+/* =========================================
+   POKEMON LIST PAGE
+========================================= */
+
+.pokemon-list-page {
+    width: 100%;
+    min-height: 100vh;
+    padding: 40px 6% 60px;
+
+    background:
+        radial-gradient(
+            circle at top left,
+            rgba(124, 58, 237, 0.12),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at bottom right,
+            rgba(59, 130, 246, 0.10),
+            transparent 30%
+        ),
+        #09090b;
+
+    color: #ffffff;
+    box-sizing: border-box;
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.pokemon-list-header {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto 40px;
+
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
+    align-items: flex-end;
+    justify-content: space-between;
+
+    gap: 30px;
+}
+
+
+.pokemon-list-label {
+    display: inline-block;
+
+    margin-bottom: 10px;
+    padding: 6px 12px;
+
+    border: 1px solid rgba(139, 92, 246, 0.35);
+    border-radius: 999px;
+
+    background: rgba(139, 92, 246, 0.10);
+
+    color: #a78bfa;
+
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+
+.pokemon-list-header h1 {
     margin: 0;
 
+    font-size: clamp(32px, 5vw, 52px);
+    line-height: 1.05;
+
+    font-weight: 800;
+    letter-spacing: -1.5px;
+
+    background: linear-gradient(
+        135deg,
+        #ffffff 20%,
+        #a78bfa 80%
+    );
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
-.Pokemon-wrapper{
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    margin: 2rem 0;
-    gap: 1rem;
+
+.pokemon-list-header p {
+    max-width: 600px;
+
+    margin: 14px 0 0;
+
+    color: #a1a1aa;
+
+    font-size: 16px;
+    line-height: 1.7;
 }
 
-.pagination-wrapper{
+
+/* =========================================
+   POKEMON COUNT
+========================================= */
+
+.pokemon-count {
+    min-width: 110px;
+
+    padding: 16px 20px;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 18px;
+
+    background: rgba(255, 255, 255, 0.04);
+
+    backdrop-filter: blur(12px);
+
+    text-align: center;
+}
+
+
+.pokemon-count span {
+    display: block;
+
+    font-size: 28px;
+    font-weight: 800;
+
+    color: #ffffff;
+}
+
+
+.pokemon-count small {
+    color: #71717a;
+
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+
+/* =========================================
+   POKEMON GRID CONTAINER
+========================================= */
+
+.pokemon-list-container {
+    width: 100%;
+    max-width: 1400px;
+
+    margin: 0 auto;
+}
+
+
+.Pokemon-wrapper {
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fill, minmax(220px, 1fr));
+
+    gap: 24px;
+
+    align-items: stretch;
+}
+
+
+/*
+   Important:
+
+   Your Pokemon.jsx component controls the
+   actual card design.
+
+   This wrapper only controls:
+   - number of columns
+   - spacing
+   - responsive behavior
+*/
+
+
+/* =========================================
+   PAGINATION
+========================================= */
+
+.pagination-wrapper {
+    width: 100%;
+    max-width: 1400px;
+
+    margin: 45px auto 0;
+
     display: flex;
-    justify-content: center;
     align-items: center;
-    gap: 1rem;
-    padding: 1rem 0;
-    margin-left: 1rem;
+    justify-content: center;
+
+    gap: 20px;
+}
+
+
+.pagination-btn {
+    min-width: 125px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
+    padding: 12px 20px;
+
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 12px;
+
+    background: rgba(255, 255, 255, 0.06);
+
+    color: #ffffff;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.pagination-btn:hover:not(:disabled) {
+    background: rgba(139, 92, 246, 0.18);
+
+    border-color: rgba(139, 92, 246, 0.5);
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.25);
+}
+
+
+.pagination-btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+
+.pagination-btn:disabled {
+    opacity: 0.3;
+
+    cursor: not-allowed;
+}
+
+
+.pagination-btn span {
+    font-size: 18px;
+}
+
+
+/* =========================================
+   PAGINATION CENTER TEXT
+========================================= */
+
+.pagination-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 100px;
+}
+
+
+.pagination-info span {
+    color: #71717a;
+
+    font-size: 13px;
+    font-weight: 500;
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 900px) {
+
+    .pokemon-list-page {
+        padding: 35px 4% 50px;
+    }
+
+
+    .pokemon-list-header {
+        align-items: flex-start;
+    }
+
+
+    .Pokemon-wrapper {
+        grid-template-columns:
+            repeat(auto-fill, minmax(190px, 1fr));
+
+        gap: 18px;
+    }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+    .pokemon-list-page {
+        padding: 25px 16px 40px;
+    }
+
+
+    .pokemon-list-header {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        margin-bottom: 28px;
+
+        gap: 20px;
+    }
+
+
+    .pokemon-list-header h1 {
+        font-size: 36px;
+    }
+
+
+    .pokemon-list-header p {
+        font-size: 14px;
+    }
+
+
+    .pokemon-count {
+        width: 100%;
+
+        box-sizing: border-box;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        gap: 8px;
+
+        padding: 12px;
+    }
+
+
+    .pokemon-count span {
+        font-size: 20px;
+    }
+
+
+    .Pokemon-wrapper {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 14px;
+    }
+
+
+    .pagination-wrapper {
+        margin-top: 30px;
+
+        gap: 10px;
+    }
+
+
+    .pagination-btn {
+        min-width: 0;
+
+        flex: 1;
+
+        padding: 11px 12px;
+
+        font-size: 13px;
+    }
+
+
+    .pagination-info {
+        display: none;
+    }
+
+}
+
+
+/* =========================================
+   VERY SMALL DEVICES
+========================================= */
+
+@media (max-width: 380px) {
+
+    .Pokemon-wrapper {
+        grid-template-columns: 1fr;
+    }
+
+
+    .pokemon-list-header h1 {
+        font-size: 32px;
+    }
+
 }
