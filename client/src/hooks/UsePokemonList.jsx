@@ -5,18 +5,18 @@ function usePokemonList(){
     const [pokemonListState, setPokemonListState] = useState({
         pokemonList:[],
         isLoading: true,
-        url:"https://pokeapi.co/api/v2/pokemon?limit=20&offset=0",
+        url:"https://pokeapi.co/api/v2/pokemon?limit=50&offset=0",
         nextUrl: "", 
         prevUrl: "",
         error: null
     })
-        async function downloadPokemonList(){
+        async function downloadPokemonList(url, append = false){
         try{
             setPokemonListState((state) => ({
                 ...state,
                 isLoading: true
             }))
-            const response = await axios.get(pokemonListState.url)
+            const response = await axios.get(url)
             // await new Promise(resolve => setTimeout(resolve, 1000));
 
             const res = response.data.results.map(async (r) => await axios.get(r.url));
@@ -33,7 +33,7 @@ function usePokemonList(){
             }))
             setPokemonListState((state) => ({
                 ...state,
-                pokemonList: list,
+                pokemonList: append ? [...state.pokemonList, ...list]: list,
                 nextUrl: response.data.next,
                 prevUrl: response.data.previous,
                 isLoading: false
@@ -52,9 +52,16 @@ function usePokemonList(){
     
     
     useEffect(() => {
-        downloadPokemonList();
+        downloadPokemonList(pokemonListState.url);
     }, [pokemonListState.url]);
-    return {pokemonListState, setPokemonListState};
+    function loadMore(){
+        if(!pokemonListState.nextUrl || pokemonListState.isLoading){
+            return;
+        }
+        downloadPokemonList(pokemonListState.nextUrl, true);
+        
+    }
+    return {pokemonListState, setPokemonListState, loadMore};
 }
 
 

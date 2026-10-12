@@ -4,8 +4,9 @@ import usePokemonList from '../../hooks/UsePokemonList.jsx';
 import Loader from '../Loader/Loader.jsx';
 import Error from '../Error/Error.jsx';
 
-function PokemonList() {
-    const { pokemonListState, setPokemonListState } = usePokemonList();
+
+function PokemonList({SearchValue}) {
+    const { pokemonListState, setPokemonListState, loadMore} = usePokemonList();
 
     const {
         pokemonList,
@@ -14,10 +15,6 @@ function PokemonList() {
         prevUrl,
         error
     } = pokemonListState;
-
-    if (isLoading) {
-        return <Loader />;
-    }
 
     if (error) {
         return (
@@ -30,7 +27,7 @@ function PokemonList() {
 
     return (
         <main className="pokemon-list-page">
-
+            
             {/* Page Header */}
             <section className="pokemon-list-header">
                 <div>
@@ -49,7 +46,7 @@ function PokemonList() {
                 </div>
 
                 <div className="pokemon-count">
-                    <span>{pokemonList.length}</span>
+                    <span>{pokemonList.filter((pokemon) => pokemon.name.toLowerCase().includes(SearchValue) || pokemon.id.toString() === SearchValue).length}</span>
                     <small>Pokémon</small>
                 </div>
             </section>
@@ -58,12 +55,15 @@ function PokemonList() {
             {/* Pokémon Grid */}
             <section className="pokemon-list-container">
                 <div className="Pokemon-wrapper">
-                    {pokemonList.map((pokemon) => (
+                    
+                        {pokemonList.filter((pokemon) => pokemon.name.toLowerCase().includes(SearchValue) || pokemon.id.toString() === SearchValue)
+                    .map((pokemon) => (
                         <Pokemon
                             pokemon={pokemon}
                             key={pokemon.id}
-                        />
+                            />
                     ))}
+                    
                 </div>
             </section>
 
@@ -78,7 +78,6 @@ function PokemonList() {
                         setPokemonListState((state) => ({
                             ...state,
                             url: prevUrl,
-                            pokemonList: []
                         }))
                     }
                 >
@@ -88,7 +87,9 @@ function PokemonList() {
 
 
                 <div className="pagination-info">
-                    <span>Explore more</span>
+                    <button onClick={loadMore} className="load-more-btn">
+                        Explore more
+                    </button>
                 </div>
 
 
@@ -99,7 +100,6 @@ function PokemonList() {
                         setPokemonListState((state) => ({
                             ...state,
                             url: nextUrl,
-                            pokemonList: []
                         }))
                     }
                 >

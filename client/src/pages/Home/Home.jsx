@@ -1,8 +1,10 @@
 import Search from "../../components/SearchBar/Search";
 import "./Home.css";
 import PokemonList from "../../components/PokemonGrid/PokemonList";
+import {useState} from "react";
 
 function Pokedex() {
+    const [searchValue, setSearchValue] = useState("");
     return (
         <main className="pokedex-wrapper">
 
@@ -82,7 +84,7 @@ function Pokedex() {
 
                     {/* Search */}
                     <div className="home-search-wrapper">
-                        <Search />
+                        <Search onSearch={setSearchValue}/>
                     </div>
 
 
@@ -121,7 +123,8 @@ function Pokedex() {
 
             <section className="pokedex-content">
 
-                <PokemonList />
+                <PokemonList SearchValue={searchValue} />
+                
 
             </section>
 

@@ -36,9 +36,10 @@ function PokemonDetails(){
     useEffect(() => {
         downloadPokemon();
     },[pokemonList.currId]);
-
+    console.log("PokemonDetails current Pokemon: ", pokemonList.pokemon);
     return <>
-    <PokemonInfo pokemon = {pokemonList.pokemon}/>
+    {pokemonList.pokemon === null ? <div className="Loading">Loading</div>:
+        <PokemonInfo pokemon = {pokemonList.pokemon}/>}
 
     <div className = "pagination-wrapper">
         <button disabled = {id < 2} onClick = {() => setPokemonList((state) => ({
