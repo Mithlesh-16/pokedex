@@ -4,7 +4,7 @@ import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { useFavorites } from "../../hooks/useFavorites.js";
 import EvolutionTree from "../../components/Evolution/EvolutionTree.jsx";
 import PokemonTypes from "../../components/Type/PokemonTypes.jsx";
-import PokemonSimilarTypes from "../../components/Type/pokemonSimilarTypes.jsx";
+import PokemonSimilarTypes from "../../components/Type/PokemonSimilarTypes.jsx";
 
 import "./PokemonInfo.css";
 
