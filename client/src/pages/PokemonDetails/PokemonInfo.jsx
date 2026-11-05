@@ -1,364 +1,248 @@
-import "./PokemonInfo.css";
-import { useFavorites } from "../../hooks/useFavorites.js";
-import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import useEvolutionChain from "../../hooks/useEvolutionChain.jsx";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 
-function PokemonInfo({ pokemon }) {
-    console.log("PokemonInfo component received pokemon:", pokemon);
-    const {evolutionMap, parentMap} = useEvolutionChain({pokemon});
-    const { isFavorite, toggleFavorite } = useFavorites();
-    const favorite = isFavorite(pokemon?.id);
-    const primaryType = pokemon?.types?.[0] || "normal";
+import { useFavorites } from "../../hooks/useFavorites.js";
+import EvolutionTree from "../../components/Evolution/EvolutionTree.jsx";
+import PokemonTypes from "../../components/Type/PokemonTypes.jsx";
+import PokemonSimilarTypes from "../../components/Type/pokemonSimilarTypes.jsx";
 
-    function formatName(name) {
-        if (!name) return "";
+import "./PokemonInfo.css";
 
-        return name
-            .split("-")
-            .map(
-                word =>
-                    word.charAt(0).toUpperCase() +
-                    word.slice(1)
-            )
-            .join(" ");
-    }
+function formatName(name = "") {
+    return name.split("-")
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
+}
+
+function PokemonStatsChart({ stats = [] }) {
+    const maxStat = Math.max(...stats.map(stat => stat.value), 1);
 
     return (
-        <main
-            className={`pokemon-info pokemon-type-theme-${primaryType}`}
-        >
-            {/* =========================================
-                TOP HERO CARD
-            ========================================= */}
+        <div className="stats-chart">
+            <div className="stats-chart-axis">
+                <span>{maxStat}</span>
+                <span>{Math.round(maxStat / 2)}</span>
+                <span>0</span>
+            </div>
 
-            <section className="pokemon-hero-card">
-                {/* Decorative background elements */}
+            <div className="stats-chart-bars">
+                {stats.map(stat => (
+                    <div className="stats-chart-item" key={stat.name}>
+                        <div className="stats-chart-value">
+                            {stat.value}
+                        </div>
 
-                <div className="pokemon-hero-glow"></div>
-                <div className="pokemon-hero-ring"></div>
+                        <div className="stats-chart-track">
+                            <div
+                                className="stats-chart-fill"
+                                style={{
+                                    height: `${stat.value / maxStat * 100}%`
+                                }}
+                            />
+                        </div>
 
-                {/* =====================================
-                    HERO IMAGE
-                ===================================== */}
+                        <span className="stats-chart-label">
+                            {formatName(stat.name)}
+                        </span>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+}
 
-                <div className="pokemon-info-image-wrapper">
-                    <div className="pokemon-image-backdrop"></div>
-                    <div className="pokemon-image-ring"></div>
+function PokemonInfo({ pokemon }) {
+    const { isFavorite, toggleFavorite } = useFavorites();
+    const favorite = isFavorite(pokemon?.id);
+    const id = Number(pokemon?.id);
 
-                    <span className="pokemon-info-number">
-                        #{String(pokemon?.id).padStart(3, "0")}
-                    </span>
+    return (
+        <main className={`pokemon-detail-page pokemon-type-theme-${pokemon?.types?.[0] || "normal"}`}>
+            {/* Page heading */}
+            <header className="detail-page-header">
+                <div className="detail-title-group">
+                    <Link to="/" className="detail-back-button">
+                        ←
+                    </Link>
 
-                    <img
-                        className="pokemon-info-image"
-                        src={pokemon?.image}
-                        alt={pokemon?.name}
-                    />
+                    <h1>
+                        {formatName(pokemon?.name)}
+                        <span>#{String(id).padStart(3, "0")}</span>
+                    </h1>
                 </div>
 
-                {/* =====================================
-                    POKEMON DETAILS
-                ===================================== */}
+                <div className="detail-header-actions">
+                    <Link to="/favorites" className="detail-navigation-button">
+                        <FaHeart/>favorites
+                    </Link>
+                    <button
+                        type="button"
+                        className={`detail-favorite-button ${favorite ? "active" : ""}`}
+                        onClick={() => toggleFavorite(pokemon)}
+                        aria-label={favorite ? "Remove from favorites" : "Add to favorites"}
+                    >
+                        {favorite ? <FaHeart /> : <FaRegHeart />}
+                    </button>
 
-                <div className="pokemon-info-title">
-                    <span className="pokemon-info-label">
-                        Pokémon Details
-                    </span>
+                    <Link
+                        to={`/pokemon/${id - 1}`}
+                        className="detail-navigation-button"
+                        aria-label="Previous Pokémon"
+                        onClick={event => {
+                            if (id <= 1) event.preventDefault();
+                        }}
+                        style={{ opacity: id <= 1 ? 0.4 : 1 }}
+                    >
+                        Prev
+                    </Link>
 
-                    <div className="pokemon-info-name-wrapper">
-                        <h1 className="pokemon-info-name">
-                            {formatName(pokemon?.name)}
-                        </h1>
+                    <Link
+                        to={`/pokemon/${id + 1}`}
+                        className="detail-navigation-button"
+                    >
+                        Next
+                    </Link>
+                </div>
+            </header>
 
-                        <button
-                            className={`favorite-button ${
-                                favorite
-                                    ? "favorite-active"
-                                    : ""
-                            }`}
-                            onClick={() =>
-                                toggleFavorite(pokemon)
-                            }
-                            aria-label={
-                                favorite
-                                    ? "Remove from favorites"
-                                    : "Add to favorites"
-                            }
-                        >
-                            {favorite ? (
-                                <FaHeart className="heart-filled" />
-                            ) : (
-                                <FaRegHeart className="heart-empty" />
-                            )}
-                        </button>
+            {/* Main information card */}
+            <section className="pokemon-detail-card">
+
+                {/* Left: Artwork */}
+                <div className="detail-artwork-panel">
+                    <div className="detail-artwork-background">
+                        <img
+                            src={pokemon?.image}
+                            alt={pokemon?.name}
+                            className="detail-pokemon-image"
+                        />
                     </div>
+                </div>
 
-                    {/* Pokemon Types */}
-                    <div className="pokemon-info-types">
-                        {console.log("Pokemon types:", pokemon)}
-                        {pokemon?.types?.map(type => (
-                            <span
-                                key={type}
-                                className={`pokemon-type ${type}`}
-                            >
-                                <span className="type-dot"></span>
-                                {formatName(type)}
-                            </span>
-                        ))}
-                    </div>
+                {/* Right: Information */}
+                <div className="detail-information-panel">
 
-                    {/* Quick information */}
+                    {/* Description */}
+                    <section className="detail-description">
+                        <h2>Description</h2>
 
-                    <div className="pokemon-quick-info">
-                        <div className="quick-info-item">
-                            <span>Species</span>
-                            <strong>
-                                {formatName(pokemon?.species)}
-                            </strong>
+                        <p>
+                            {pokemon?.description ||
+                                "Pokédex description is not available."}
+                        </p>
+                    </section>
+
+                    {/* Attributes */}
+                    <section className="detail-attributes">
+                        <h2>Attributes</h2>
+
+                        <div className="attributes-content">
+                            <div className="attribute-values">
+                                <p>
+                                    <strong>Height:</strong>
+                                    {(pokemon?.height / 10).toFixed(1)} m
+                                </p>
+
+                                <p>
+                                    <strong>Weight:</strong>
+                                    {(pokemon?.weight / 10).toFixed(1)} kg
+                                </p>
+
+                                <p>
+                                    <strong>Species:</strong>
+                                    {formatName(pokemon?.species)}
+                                </p>
+                            </div>
+
+                            <div className="attribute-types">
+                                {pokemon?.types?.map(type => (
+                                    <span className={`attribute-type ${type}`} key={type}>
+                                        {formatName(type)}
+                                    </span>
+                                ))}
+                            </div>
                         </div>
 
-                        <div className="quick-info-divider"></div>
-
-                        <div className="quick-info-item">
-                            <span>Height</span>
-                            <strong>
-                                {(pokemon?.height / 10).toFixed(1)} m
-                            </strong>
+                        <div className="attribute-abilities">
+                            <span>Abilities</span>
+                            <div>
+                                {pokemon?.abilities?.map(ability => (
+                                    <span key={ability.name}>
+                                        {formatName(ability.name)}
+                                    </span>
+                                ))}
+                            </div>
                         </div>
+                    </section>
 
-                        <div className="quick-info-divider"></div>
-
-                        <div className="quick-info-item">
-                            <span>Weight</span>
-                            <strong>
-                                {(pokemon?.weight / 10).toFixed(1)} kg
-                            </strong>
-                        </div>
-                    </div>
-
-                    {/* =================================
-                        FAVORITES NAVIGATION
-                    ================================= */}
-
-                    <div className="pokemon-hero-actions">
-                        <Link
-                            to="/favorites"
-                            className="favorites-page-button"
-                        >
-                            <FaHeart />
+                    {/* Base stats */}
+                    <section className="detail-stats">
+                        <div className="detail-section-heading">
+                            <h2>Stats</h2>
                             <span>
-                                Go to Favorites
+                                Total: {pokemon?.stats?.reduce(
+                                    (sum, stat) => sum + stat.value, 0
+                                )}
                             </span>
-                            <span className="action-arrow">
-                                →
-                            </span>
-                        </Link>
+                        </div>
 
-                        <Link
-                            to="/"
-                            className="back-pokedex-button"
-                        >
-                            ← Back to Pokédex
-                        </Link>
-                    </div>
+                        <PokemonStatsChart stats={pokemon?.stats || []} />
+                    </section>
                 </div>
             </section>
 
-            {/* =========================================
-                MAIN CONTENT
-            ========================================= */}
+            {/* Evolution */}
+            <section className="detail-lower-section">
+                <div className="detail-section-heading">
+                    <h2>Evolutions</h2>
+                </div>
 
-            <div className="pokemon-info-content">
-                {/* =====================================
-                    BASIC INFORMATION
-                ===================================== */}
+                <EvolutionTree pokemon={pokemon} />
+            </section>
 
-                <section className="pokemon-info-section">
-                    <div className="section-heading">
-                        <div>
-                            <span className="section-label">
-                                Overview
-                            </span>
-                            <h2>
-                                Basic Information
-                            </h2>
-                        </div>
-                    </div>
+            {/* Type effectiveness */}
+            <section className="detail-lower-section">
+                <div className="detail-section-heading">
+                    <h2>Type Effectiveness</h2>
+                </div>
 
-                    <div className="pokemon-basic-info">
-                        <div className="pokemon-info-box">
-                            <span>
-                                Height
-                            </span>
-                            <strong>
-                                {(pokemon?.height / 10).toFixed(1)}
-                                <small> m</small>
-                            </strong>
-                        </div>
+                <PokemonTypes types={pokemon?.types} />
+            </section>
 
-                        <div className="pokemon-info-box">
-                            <span>
-                                Weight
-                            </span>
-                            <strong>
-                                {(pokemon?.weight / 10).toFixed(1)}
-                                <small> kg</small>
-                            </strong>
-                        </div>
+            {/* Moves */}
+            <section className="detail-lower-section">
+                <div className="detail-section-heading">
+                    <h2>Moves</h2>
+                    <span>{pokemon?.moves?.length || 0} moves</span>
+                </div>
 
-                        <div className="pokemon-info-box">
-                            <span>
-                                Species
-                            </span>
-                            <strong className="species-value">
-                                {formatName(pokemon?.species)}
-                            </strong>
-                        </div>
-                    </div>
-                </section>
-
-                {/* =====================================
-                    ABILITIES
-                ===================================== */}
-
-                <section className="pokemon-info-section">
-                    <div className="section-heading">
-                        <div>
-                            <span className="section-label">
-                                Traits
-                            </span>
-                            <h2>
-                                Abilities
-                            </h2>
-                        </div>
-                    </div>
-
-                    <div className="pokemon-badges">
-                        {pokemon?.abilities?.map(ability => (
-                            <span
-                                key={ability}
-                                className="pokemon-ability"
-                            >
-                                <span className="ability-dot"></span>
-                                {formatName(ability)}
-                            </span>
-                        ))}
-                    </div>
-                </section>
-
-                {/* =====================================
-                    BASE STATS
-                ===================================== */}
-
-                <section className="pokemon-info-section">
-                    <div className="section-heading">
-                        <div>
-                            <span className="section-label">
-                                Performance
-                            </span>
-                            <h2>
-                                Base Stats
-                            </h2>
-                        </div>
-                    </div>
-
-                    <div className="pokemon-stats">
-                        {pokemon?.stats?.map(stat => (
-                            <div
-                                className="pokemon-stat"
-                                key={stat.name}
-                            >
-                                <div className="pokemon-stat-header">
-                                    <span className="pokemon-stat-name">
-                                        {formatName(stat.name)}
-                                    </span>
-
-                                    <span className="pokemon-stat-value">
-                                        {stat.value}
-                                    </span>
-                                </div>
-
-                                <div className="pokemon-stat-bar">
-                                    <div
-                                        className="pokemon-stat-fill"
-                                        style={{
-                                            width: `${Math.min(
-                                                (stat.value / 255) * 100,
-                                                100
-                                            )}%`
-                                        }}
-                                    />
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </section>
-
-                {/* =====================================
-                    Evolution Chain}
-                    ===================================== */}
-                <section className="pokemon-info-section">
-                    <section className="section-heading">
-                        <div>
-                            <span className="section-label">
-                                Evolution
-                            </span>
-                            <h2>
-                                Evolution Chain
-                            </h2>
-                        </div>
-                    </section>
-<div className="pokemon-evolution-chain">
-    {evolutionMap.get(pokemon.id)?.map((item) => (
-        <div key={item.id}>
-            {item.id} - {item.name} - {item.url}
-        </div>
-    ))}
-</div>
-                   
-                </section>
-
-                {/* =====================================
-                    MOVES
-                ===================================== */}
-
-                <section className="pokemon-info-section">
-                    <div className="pokemon-moves-heading">
-                        <div>
-                            <span className="section-label">
-                                Battle
-                            </span>
-                            <h2>
-                                Moves
-                            </h2>
-                        </div>
-
-                        <span className="pokemon-moves-count">
-                            {pokemon?.moves?.length || 0} moves
+                <div className="detail-moves-list">
+                    {pokemon?.moves?.slice(0, 24).map(move => (
+                        <span key={move.name}>
+                            {formatName(move.name)}
                         </span>
-                    </div>
+                    ))}
+                </div>
 
-                    <div className="pokemon-moves">
-                        {pokemon?.moves
-                            ?.slice(0, 24)
-                            .map(move => (
-                                <span
-                                    key={move}
-                                    className="pokemon-move"
-                                >
-                                    {formatName(move)}
-                                </span>
-                            ))}
-                    </div>
+                {pokemon?.moves?.length > 24 && (
+                    <p className="detail-moves-note">
+                        Showing first 24 moves
+                    </p>
+                )}
+            </section>
 
-                    {pokemon?.moves?.length > 24 && (
-                        <p className="pokemon-moves-note">
-                            Showing first 24 moves
-                        </p>
-                    )}
-                </section>
-            </div>
+            {/* Similar Pokémon */}
+            <section className="detail-lower-section">
+                <div className="detail-section-heading">
+                    <h2>Similar Pokémon</h2>
+                </div>
+
+                <PokemonSimilarTypes
+                    types={pokemon?.types}
+                    currentPokemonName={pokemon?.name}
+                />
+            </section>
+
         </main>
     );
 }

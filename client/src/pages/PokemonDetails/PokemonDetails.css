@@ -8,9 +8,9 @@
 }
 
 .pagination-wrapper {
-    margin-top: 25px;
+    margin-top: 0;
     display: flex;
-    gap: 15px;
+    /* gap: 15px; */
 }
 
 .pagination-wrapper button {
@@ -25,6 +25,7 @@
     font-weight: 600;
     transition: 0.3s;
     font-family: 'Courier New', Courier, monospace;
+    margin: 0 10px 10px 10px;
 }
 
 .pagination-wrapper button:hover:not(:disabled) {

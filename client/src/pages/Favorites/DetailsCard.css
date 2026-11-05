@@ -1,107 +1,17 @@
-/* =========================================================
-   POKÉDEX FAVORITES
-   DETAILS + SUMMARY CARDS
-   Responsive Glassmorphism Design
-   ========================================================= */
 
-
-/* =========================================================
-   ROOT VARIABLES
-   ========================================================= */
-
-:root {
-
-    --pokemon-yellow: #ffcb05;
-    --pokemon-blue: #3b4cca;
-    --pokemon-red: #ee1515;
-
-    --text-primary: #f8fafc;
-    --text-secondary: #94a3b8;
-    --text-muted: #64748b;
-
-    --card-bg: rgba(15, 23, 42, 0.78);
-    --card-bg-dark: rgba(2, 6, 23, 0.94);
-
-    --card-border: rgba(148, 163, 184, 0.13);
-
-    --card-radius: 20px;
-
-    --page-width: 1250px;
-
-    --card-transition:
-        0.45s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-
-/* =========================================================
-   COMMON CARD
-   ========================================================= */
+/* ============================================
+   POKEMON TYPE THEMES
+   ============================================ */
 
 .summary-card,
 .details-card {
-
-    position: relative;
-
-    /*
-       IMPORTANT:
-       Don't allow the card to become wider than the
-       actual comfortable reading/display width.
-    */
-
-    width: min(
-        calc(100% - 32px),
-        var(--page-width)
-    );
-
-    margin-left: auto;
-    margin-right: auto;
+    --type-color: #a8a878;
+    --type-light: #d0d0a8;
 
     box-sizing: border-box;
-
-    overflow: hidden;
-
-    isolation: isolate;
-
-    cursor: pointer;
-
-    color: var(--text-primary);
-
-    font-family:
-        Inter,
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
-
-    background:
-        linear-gradient(
-            135deg,
-            rgba(30, 41, 59, 0.82),
-            rgba(2, 6, 23, 0.95)
-        );
-
-    border:
-        1px solid var(--card-border);
-
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-
-    box-shadow:
-        0 10px 30px rgba(0, 0, 0, 0.25),
-        inset 0 1px 0 rgba(255, 255, 255, 0.035);
-
-    transition:
-        transform var(--card-transition),
-        border-color var(--card-transition),
-        box-shadow var(--card-transition),
-        background var(--card-transition);
+    color: #f8fafc;
+    font-family: inherit;
 }
-
-
-/* =========================================================
-   TYPE COLORS
-   ========================================================= */
 
 .summary-card[data-type="grass"],
 .details-card[data-type="grass"] {
@@ -211,1529 +121,636 @@
     --type-light: #d0d0a8;
 }
 
-
-/* =========================================================
+/* ============================================
    SUMMARY CARD
-   ========================================================= */
+   ============================================ */
 
 .summary-card {
+    position: relative;
+    min-width: 0;
+    min-height: 154px;
 
-    min-height: 72px;
-
-    margin-top: 10px;
-    margin-bottom: 10px;
-
-    padding:
-        0 22px;
+    padding: 10px 11px 8px;
 
     display: flex;
+    flex-direction: column;
+    gap: 5px;
 
-    align-items: center;
+    border: 1px solid rgba(148, 163, 184, 0.12);
+    border-left: 3px solid var(--type-color);
+    border-radius: 11px;
 
-    justify-content: space-between;
+    background:
+        linear-gradient(
+            145deg,
+            rgba(30, 41, 59, 0.88),
+            rgba(2, 6, 23, 0.96)
+        );
 
-    gap: 18px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.17);
 
-    border-left:
-        3px solid
-        var(--type-color, var(--pokemon-yellow));
-
-    animation:
-        summaryEnter
-        0.4s cubic-bezier(0.22, 1, 0.36, 1)
-        both;
+    cursor: pointer;
+    transition: 0.2s ease;
 }
-
-
-/* =========================================================
-   SUMMARY HOVER
-   ========================================================= */
 
 .summary-card:hover {
+    transform: translateY(-2px);
 
-    transform:
-        translateY(-2px)
-        scale(1.003);
-
-    border-color:
-        var(--type-color);
+    border-color: var(--type-color);
 
     box-shadow:
-        0 15px 35px rgba(0, 0, 0, 0.35),
-
-        0 0 25px
-        color-mix(
-            in srgb,
-            var(--type-color) 12%,
-            transparent
-        );
+        0 8px 20px rgba(0, 0, 0, 0.3),
+        0 0 12px rgba(255, 255, 255, 0.025);
 }
 
+.summary-card:focus-visible {
+    outline: 2px solid var(--type-color);
+    outline-offset: 3px;
+}
 
-/* =========================================================
-   SUMMARY HEADER
-   ========================================================= */
+/* ============================================
+   CARD TOP
+   ============================================ */
 
-.summary-card-header {
+.summary-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
 
+.pokemon-number {
+    color: var(--type-light);
+
+    font-family: monospace;
+    font-size: 0.64rem;
+    font-weight: 750;
+    letter-spacing: 0.5px;
+}
+
+.favorite-remove-button {
+    width: 27px;
+    height: 27px;
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid rgba(248, 88, 136, 0.15);
+    border-radius: 7px;
+
+    color: #f85888;
+    background: rgba(248, 88, 136, 0.07);
+
+    font-size: 0.75rem;
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.favorite-remove-button:hover {
+    color: white;
+    background: #f85888;
+}
+
+/* ============================================
+   SUMMARY CARD MAIN
+   ============================================ */
+
+.summary-card-main {
     min-width: 0;
-
     flex: 1;
 
     display: flex;
-
     align-items: center;
-
-    justify-content: space-between;
-
-    gap: 20px;
+    gap: 8px;
 }
 
-
-.summary-card-header h3 {
-
-    min-width: 0;
-
-    margin: 0;
+.summary-card-image {
+    width: 77px;
+    height: 77px;
+    flex-shrink: 0;
 
     display: flex;
-
     align-items: center;
-
-    gap: 11px;
-
-    overflow: hidden;
-
-    font-size: clamp(
-        0.95rem,
-        1.5vw,
-        1.08rem
-    );
-
-    font-weight: 650;
-
-    text-transform: capitalize;
-
-    white-space: nowrap;
-
-    text-overflow: ellipsis;
-
-    color: var(--text-primary);
-
-    transition:
-        color 0.25s ease;
-}
-
-
-.summary-card:hover .summary-card-header h3 {
-
-    color: var(--type-light);
-}
-
-
-/* =========================================================
-   DETAILS CARD
-   ========================================================= */
-
-.details-card {
-
-    /*
-       Keep expanded card visually substantial,
-       but don't let it consume the whole screen.
-    */
-
-    min-height: 0;
-
-    margin-top: 14px;
-    margin-bottom: 14px;
-
-    border-radius: var(--card-radius);
-
-    border-color:
-        color-mix(
-            in srgb,
-            var(--type-color) 30%,
-            rgba(255, 255, 255, 0.08)
-        );
-
-    background:
-
-        radial-gradient(
-            circle at 50% 35%,
-            color-mix(
-                in srgb,
-                var(--type-color) 13%,
-                transparent
-            ),
-            transparent 55%
-        ),
-
-        linear-gradient(
-            145deg,
-            rgba(15, 23, 42, 0.97),
-            rgba(2, 6, 23, 0.98)
-        );
-
-    box-shadow:
-
-        0 20px 55px
-        rgba(0, 0, 0, 0.42),
-
-        0 0 40px
-        color-mix(
-            in srgb,
-            var(--type-color) 11%,
-            transparent
-        ),
-
-        inset 0 1px 0
-        rgba(255, 255, 255, 0.05);
-
-    /*
-       Smooth entrance when the expanded version
-       is mounted.
-    */
-
-    animation:
-        detailsEnter
-        0.55s cubic-bezier(0.22, 1, 0.36, 1)
-        both;
-}
-
-
-/* =========================================================
-   DETAILS HOVER
-   ========================================================= */
-
-.details-card:hover {
-
-    transform:
-        translateY(-2px);
-
-    border-color:
-        color-mix(
-            in srgb,
-            var(--type-color) 55%,
-            transparent
-        );
-
-    box-shadow:
-
-        0 25px 60px
-        rgba(0, 0, 0, 0.5),
-
-        0 0 50px
-        color-mix(
-            in srgb,
-            var(--type-color) 16%,
-            transparent
-        );
-}
-
-
-/* =========================================================
-   HEADER
-   ========================================================= */
-
-.details-card-header {
-
-    min-height: 66px;
-
-    padding:
-        0 22px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    gap: 15px;
-
-    border-bottom:
-        1px solid
-        rgba(255, 255, 255, 0.065);
-
-    background:
-        rgba(255, 255, 255, 0.015);
-}
-
-
-.details-card-header h3 {
-
-    margin: 0;
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 10px;
-
-    font-size:
-        clamp(
-            1rem,
-            1.7vw,
-            1.18rem
-        );
-
-    font-weight: 700;
-
-    text-transform: capitalize;
-
-    color: #ffffff;
-}
-
-
-/* =========================================================
-   ARROW
-   ========================================================= */
-
-.card-arrow {
-
-    width: 20px;
-
-    height: 20px;
-
-    display: inline-flex;
-
-    align-items: center;
-
     justify-content: center;
 
-    flex-shrink: 0;
-
-    color: var(--type-light);
-
-    font-size: 0.7rem;
-
-    transition:
-        transform 0.3s
-        cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-
-.summary-card:hover .card-arrow {
-
-    transform:
-        translateX(4px);
-}
-
-
-.details-card:hover .card-arrow {
-
-    transform:
-        translateY(2px);
-}
-
-
-/* =========================================================
-   POKEMON NUMBER
-   ========================================================= */
-
-.pokemon-number {
-
-    flex-shrink: 0;
-
-    padding:
-        5px 10px;
-
-    border-radius: 999px;
-
-    font-family:
-        "SFMono-Regular",
-        Consolas,
-        monospace;
-
-    font-size: 0.7rem;
-
-    font-weight: 700;
-
-    letter-spacing: 0.8px;
-
-    color: var(--type-light);
-
-    background:
-        rgba(255, 255, 255, 0.035);
-
-    border:
-        1px solid
-        color-mix(
-            in srgb,
-            var(--type-color) 30%,
-            transparent
-        );
-
-    transition:
-        transform 0.25s ease,
-        background 0.25s ease;
-}
-
-
-.summary-card:hover .pokemon-number,
-.details-card:hover .pokemon-number {
-
-    transform:
-        scale(1.04);
-
-    background:
-        rgba(255, 255, 255, 0.06);
-}
-
-
-/* =========================================================
-   DETAILS BODY
-   ========================================================= */
-
-.details-card-body {
-
-    position: relative;
-
-    min-height: 260px;
-
-    padding:
-        clamp(22px, 4vw, 38px);
-
-    display: grid;
-
-    grid-template-columns:
-        minmax(220px, 0.8fr)
-        minmax(300px, 1.2fr);
-
-    align-items: center;
-
-    gap:
-        clamp(30px, 6vw, 90px);
-
-    overflow: hidden;
-}
-
-
-/* =========================================================
-   BACKGROUND GRID
-   ========================================================= */
-
-.details-card-body::before {
-
-    content: "";
-
-    position: absolute;
-
-    inset: 0;
-
-    z-index: -1;
-
-    opacity: 0.08;
-
-    background-image:
-
-        linear-gradient(
-            rgba(255, 255, 255, 0.07) 1px,
-            transparent 1px
-        ),
-
-        linear-gradient(
-            90deg,
-            rgba(255, 255, 255, 0.07) 1px,
-            transparent 1px
-        );
-
-    background-size:
-        30px 30px;
-
-    mask-image:
-        radial-gradient(
-            circle at center,
-            black,
-            transparent 75%
-        );
-
-    animation:
-        gridMove
-        18s linear infinite;
-}
-
-
-/* =========================================================
-   IMAGE AREA
-   ========================================================= */
-
-.details-card-image {
-
-    position: relative;
-
-    width:
-        clamp(155px, 20vw, 205px);
-
-    height:
-        clamp(155px, 20vw, 205px);
-
-    margin:
-        0 auto;
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    isolation:
-        isolate;
-}
-
-
-/* =========================================================
-   IMAGE GLOW
-   ========================================================= */
-
-.image-glow {
-
-    position: absolute;
-
-    width:
-        75%;
-
-    height:
-        75%;
-
-    border-radius:
-        50%;
+    border-radius: 50%;
 
     background:
         radial-gradient(
             circle,
-            color-mix(
-                in srgb,
-                var(--type-color) 45%,
-                transparent
-            ),
-            transparent 70%
-        );
-
-    filter:
-        blur(20px);
-
-    opacity:
-        0.65;
-
-    animation:
-        pokemonAura
-        4s ease-in-out infinite;
-}
-
-
-/* =========================================================
-   IMAGE RING
-   ========================================================= */
-
-.image-ring {
-
-    position:
-        absolute;
-
-    width:
-        88%;
-
-    height:
-        88%;
-
-    border-radius:
-        50%;
-
-    border:
-        1px dashed
-        color-mix(
-            in srgb,
-            var(--type-color) 50%,
-            transparent
-        );
-
-    opacity:
-        0.75;
-
-    animation:
-        rotateRing
-        14s linear infinite;
-}
-
-
-.image-ring::before,
-.image-ring::after {
-
-    content:
-        "";
-
-    position:
-        absolute;
-
-    width:
-        7px;
-
-    height:
-        7px;
-
-    border-radius:
-        50%;
-
-    background:
-        var(--type-light);
-
-    box-shadow:
-        0 0 12px
-        var(--type-color);
-}
-
-
-.image-ring::before {
-
-    top:
-        -3px;
-
-    left:
-        50%;
-
-    transform:
-        translateX(-50%);
-}
-
-
-.image-ring::after {
-
-    bottom:
-        -3px;
-
-    left:
-        50%;
-
-    transform:
-        translateX(-50%);
-}
-
-
-/* =========================================================
-   POKEMON IMAGE
-   ========================================================= */
-
-.details-card-image img {
-
-    position:
-        relative;
-
-    z-index:
-        3;
-
-    width:
-        78%;
-
-    height:
-        78%;
-
-    object-fit:
-        contain;
-
-    filter:
-        drop-shadow(
-            0 15px 18px
-            rgba(0, 0, 0, 0.45)
-        );
-
-    animation:
-        pokemonFloat
-        4.5s ease-in-out infinite;
-
-    transition:
-        transform 0.45s
-        cubic-bezier(0.22, 1, 0.36, 1),
-
-        filter 0.35s ease;
-}
-
-
-.details-card:hover .details-card-image img {
-
-    transform:
-        scale(1.08)
-        rotate(-2deg);
-
-    filter:
-        drop-shadow(
-            0 20px 25px
-            rgba(0, 0, 0, 0.5)
+            color-mix(in srgb, var(--type-color) 14%, transparent),
+            transparent 72%
         );
 }
 
-
-/* =========================================================
-   INFORMATION AREA
-   ========================================================= */
-
-.details-card-info {
-
-    min-width:
-        0;
-
-    max-width:
-        650px;
-
-    width:
-        100%;
-
-    margin:
-        0 auto;
-}
-
-
-/* =========================================================
-   POKEMON NAME
-   ========================================================= */
-
-.pokemon-name {
-
-    margin-bottom:
-        14px;
-
-    font-size:
-        clamp(
-            1.25rem,
-            2.4vw,
-            1.65rem
-        );
-
-    font-weight:
-        800;
-
-    text-transform:
-        capitalize;
-
-    color:
-        #ffffff;
-}
-
-
-/* =========================================================
-   TYPE BADGES
-   ========================================================= */
-
-.pokemon-types {
-
-    display:
-        flex;
-
-    flex-wrap:
-        wrap;
-
-    gap:
-        8px;
-
-    margin-bottom:
-        20px;
-}
-
-
-.type-badge {
-
-    padding:
-        6px 13px;
-
-    min-width:
-        62px;
-
-    display:
-        inline-flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    border-radius:
-        999px;
-
-    font-size:
-        0.68rem;
-
-    font-weight:
-        800;
-
-    letter-spacing:
-        0.8px;
-
-    text-transform:
-        uppercase;
-
-    color:
-        #ffffff;
-
-    background:
-        color-mix(
-            in srgb,
-            var(--badge-color) 20%,
-            rgba(15, 23, 42, 0.8)
-        );
-
-    border:
-        1px solid
-        color-mix(
-            in srgb,
-            var(--badge-color) 60%,
-            transparent
-        );
-
-    box-shadow:
-        0 4px 12px
-        color-mix(
-            in srgb,
-            var(--badge-color) 12%,
-            transparent
-        );
-
-    transition:
-        transform 0.25s ease,
-        box-shadow 0.25s ease;
-}
-
-
-.type-badge:hover {
-
-    transform:
-        translateY(-2px);
-
-    box-shadow:
-        0 7px 18px
-        color-mix(
-            in srgb,
-            var(--badge-color) 20%,
-            transparent
-        );
-}
-
-
-/* =========================================================
-   TYPE BADGES
-   ========================================================= */
-
-.type-grass {
-    --badge-color: #78c850;
-}
-
-.type-fire {
-    --badge-color: #f08030;
-}
-
-.type-water {
-    --badge-color: #6890f0;
-}
-
-.type-electric {
-    --badge-color: #f8d030;
-}
-
-.type-psychic {
-    --badge-color: #f85888;
-}
-
-.type-ice {
-    --badge-color: #98d8d8;
-}
-
-.type-dragon {
-    --badge-color: #7038f8;
-}
-
-.type-dark {
-    --badge-color: #705848;
-}
-
-.type-fairy {
-    --badge-color: #ee99ac;
-}
-
-.type-fighting {
-    --badge-color: #c03028;
-}
-
-.type-poison {
-    --badge-color: #a040a0;
-}
-
-.type-ground {
-    --badge-color: #e0c068;
-}
-
-.type-rock {
-    --badge-color: #b8a038;
-}
-
-.type-bug {
-    --badge-color: #a8b820;
-}
-
-.type-ghost {
-    --badge-color: #705898;
-}
-
-.type-steel {
-    --badge-color: #b8b8d0;
-}
-
-.type-flying {
-    --badge-color: #a890f0;
-}
-
-.type-normal {
-    --badge-color: #a8a878;
-}
-
-
-/* =========================================================
-   STATS
-   ========================================================= */
-
-.pokemon-stats {
-
-    display:
-        grid;
-
-    grid-template-columns:
-        repeat(4, minmax(65px, 1fr));
-
-    gap:
-        9px;
-}
-
-
-.stat-item {
-
-    min-height:
-        55px;
-
-    padding:
-        8px;
-
-    display:
-        flex;
-
-    flex-direction:
-        column;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    gap:
-        4px;
-
-    border-radius:
-        12px;
-
-    background:
-        rgba(255, 255, 255, 0.035);
-
-    border:
-        1px solid
-        rgba(255, 255, 255, 0.06);
-
-    transition:
-        transform 0.25s ease,
-        background 0.25s ease,
-        border-color 0.25s ease;
-}
-
-
-.stat-item:hover {
-
-    transform:
-        translateY(-3px);
-
-    background:
-        rgba(255, 255, 255, 0.06);
-
-    border-color:
-        color-mix(
-            in srgb,
-            var(--type-color) 30%,
-            transparent
-        );
-}
-
-
-.stat-label {
-
-    font-size:
-        0.58rem;
-
-    font-weight:
-        700;
-
-    letter-spacing:
-        1px;
-
-    color:
-        var(--text-muted);
-}
-
-
-.stat-value {
-
-    font-family:
-        "SFMono-Regular",
-        Consolas,
-        monospace;
-
-    font-size:
-        0.85rem;
-
-    font-weight:
-        800;
-
-    color:
-        var(--type-light);
-}
-
-
-/* =========================================================
-   SUMMARY TYPE DOTS
-   ========================================================= */
-
-.summary-card-types {
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    gap:
-        6px;
-
-    flex-shrink:
-        0;
-}
-
-
-.type-dot {
-
-    width:
-        9px;
-
-    height:
-        9px;
-
-    border-radius:
-        50%;
-
-    background:
-        var(--badge-color);
-
-    box-shadow:
-        0 0 9px
-        var(--badge-color);
-
-    transition:
-        transform 0.25s ease;
-}
-
-
-.summary-card:hover .type-dot {
-
-    transform:
-        scale(1.3);
-}
-
-
-/* =========================================================
-   FOOTER
-   ========================================================= */
-
-.details-card-footer {
-
-    min-height:
-        36px;
-
-    padding:
-        0 22px 12px;
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    gap:
-        12px;
-}
-
-
-.footer-line {
-
-    height:
-        1px;
-
-    flex:
-        1;
-
-    max-width:
-        100px;
-
-    background:
-        linear-gradient(
-            90deg,
-            transparent,
-            color-mix(
-                in srgb,
-                var(--type-color) 45%,
-                transparent
-            ),
-            transparent
-        );
-}
-
-
-.footer-text {
-
-    font-size:
-        0.55rem;
-
-    font-weight:
-        800;
-
-    letter-spacing:
-        2px;
-
-    color:
-        var(--text-muted);
-
-    white-space:
-        nowrap;
-}
-
-
-/* =========================================================
-   HOLOGRAPHIC SHINE
-   ========================================================= */
-
-.details-card::after,
-.summary-card::after {
-
-    content:
-        "";
-
-    position:
-        absolute;
-
-    inset:
-        -100%;
-
-    z-index:
-        20;
-
-    pointer-events:
-        none;
-
-    background:
-        linear-gradient(
-            115deg,
-            transparent 35%,
-            rgba(255, 255, 255, 0.035) 45%,
-            rgba(255, 255, 255, 0.1) 50%,
-            rgba(255, 255, 255, 0.035) 55%,
-            transparent 65%
-        );
-
-    transform:
-        translateX(-80%)
-        rotate(10deg);
-
-    transition:
-        transform 0.9s ease;
-}
-
-
-.summary-card:hover::after,
-.details-card:hover::after {
-
-    transform:
-        translateX(80%)
-        rotate(10deg);
-}
-
-
-/* =========================================================
-   ANIMATIONS
-   ========================================================= */
-
-@keyframes summaryEnter {
-
-    from {
-
-        opacity:
-            0;
-
-        transform:
-            translateY(12px)
-            scale(0.985);
-    }
-
-    to {
-
-        opacity:
-            1;
-
-        transform:
-            translateY(0)
-            scale(1);
-    }
-}
-
-
-@keyframes detailsEnter {
-
-    0% {
-
-        opacity:
-            0;
-
-        transform:
-            translateY(-18px)
-            scale(0.97);
-
-        filter:
-            blur(5px);
-    }
-
-    60% {
-
-        opacity:
-            1;
-
-        transform:
-            translateY(3px)
-            scale(1.005);
-
-        filter:
-            blur(0);
-    }
-
-    100% {
-
-        opacity:
-            1;
-
-        transform:
-            translateY(0)
-            scale(1);
-    }
-}
-
-
-@keyframes pokemonFloat {
-
-    0%,
-    100% {
-
-        transform:
-            translateY(0);
-    }
-
-    50% {
-
-        transform:
-            translateY(-7px);
-    }
-}
-
-
-@keyframes pokemonAura {
-
-    0%,
-    100% {
-
-        opacity:
-            0.45;
-
-        transform:
-            scale(0.92);
-    }
-
-    50% {
-
-        opacity:
-            0.8;
-
-        transform:
-            scale(1.08);
-    }
-}
-
-
-@keyframes rotateRing {
-
-    from {
-
-        transform:
-            rotate(0deg);
-    }
-
-    to {
-
-        transform:
-            rotate(360deg);
-    }
-}
-
-
-@keyframes gridMove {
-
-    from {
-
-        background-position:
-            0 0,
-            0 0;
-    }
-
-    to {
-
-        background-position:
-            30px 30px,
-            30px 30px;
-    }
-}
-
-
-/* =========================================================
-   TABLET
-   ========================================================= */
-
-@media (max-width: 900px) {
-
-    .details-card-body {
-
-        grid-template-columns:
-            minmax(180px, 0.8fr)
-            minmax(250px, 1.2fr);
-
-        gap:
-            30px;
-    }
-}
-
-
-/* =========================================================
-   MOBILE
-   ========================================================= */
-
-@media (max-width: 700px) {
-
-    .summary-card,
-    .details-card {
-
-        width:
-            calc(100% - 20px);
-    }
-
-
-    .details-card-body {
-
-        grid-template-columns:
-            1fr;
-
-        gap:
-            20px;
-
-        padding:
-            28px 20px;
-    }
-
-
-    .details-card-image {
-
-        width:
-            180px;
-
-        height:
-            180px;
-    }
-
-
-    .details-card-info {
-
-        max-width:
-            500px;
-
-        text-align:
-            center;
-    }
-
-
-    .pokemon-types {
-
-        justify-content:
-            center;
-    }
-
-
-    .pokemon-stats {
-
-        width:
-            100%;
-    }
-}
-
-
-/* =========================================================
-   SMALL MOBILE
-   ========================================================= */
-
-@media (max-width: 480px) {
-
-    .summary-card {
-
-        min-height:
-            64px;
-
-        padding:
-            0 14px;
-    }
-
-
-    .summary-card-header {
-
-        gap:
-            10px;
-    }
-
-
-    .summary-card-header h3 {
-
-        font-size:
-            0.9rem;
-    }
-
-
-    .details-card-header {
-
-        min-height:
-            60px;
-
-        padding:
-            0 15px;
-    }
-
-
-    .details-card-header h3 {
-
-        font-size:
-            0.95rem;
-    }
-
-
-    .pokemon-number {
-
-        padding:
-            4px 8px;
-
-        font-size:
-            0.64rem;
-    }
-
-
-    .details-card-body {
-
-        padding:
-            22px 15px;
-    }
-
-
-    .details-card-image {
-
-        width:
-            160px;
-
-        height:
-            160px;
-    }
-
-
-    .pokemon-name {
-
-        font-size:
-            1.25rem;
-    }
-
-
-    .pokemon-stats {
-
-        grid-template-columns:
-            repeat(2, 1fr);
-    }
-
-
-    .details-card-footer {
-
-        padding:
-            0 15px 10px;
-    }
-}
-
-
-/* =========================================================
-   REDUCED MOTION
-   ========================================================= */
-
-@media (prefers-reduced-motion: reduce) {
-
-    .summary-card,
-    .details-card,
-    .details-card-image img,
-    .image-ring,
-    .image-glow,
-    .details-card-body::before {
-
-        animation:
-            none !important;
-
-        transition:
-            none !important;
-    }
-
-
-    .summary-card::after,
-    .details-card::after {
-
-        display:
-            none;
-    }
-}
-
-/* =========================================================
-   SMOOTH CARD TRANSITION WRAPPER
-   ========================================================= */
-
-.favorite-card-wrapper {
-
+.summary-card-image img {
     width: 100%;
+    height: 100%;
 
-    display: grid;
+    object-fit: contain;
 
-    grid-template-rows: 72px;
+    filter: drop-shadow(0 5px 5px rgba(0, 0, 0, 0.3));
+    transition: transform 0.2s ease;
+}
 
-    transition:
-        grid-template-rows
-        0.5s cubic-bezier(0.22, 1, 0.36, 1);
+.summary-card:hover .summary-card-image img {
+    transform: scale(1.08);
+}
+
+.summary-card-information {
+    min-width: 0;
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.summary-card-information h3 {
+    margin: 0;
 
     overflow: hidden;
+
+    color: #f8fafc;
+
+    font-size: 0.86rem;
+    font-weight: 750;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-transform: capitalize;
 }
 
+/* ============================================
+   TYPE BADGES
+   ============================================ */
 
-.favorite-card-wrapper.expanded {
+.favorite-type-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
 
-    grid-template-rows: minmax(390px, auto);
+.favorite-type {
+    padding: 3px 7px;
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+
+    background: color-mix(
+        in srgb,
+        var(--badge-color) 15%,
+        transparent
+    );
+
+    color: var(--badge-color);
+
+    font-size: 0.55rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.type-grass { --badge-color: #78c850; }
+.type-fire { --badge-color: #f08030; }
+.type-water { --badge-color: #6890f0; }
+.type-electric { --badge-color: #f8d030; }
+.type-psychic { --badge-color: #f85888; }
+.type-ice { --badge-color: #98d8d8; }
+.type-dragon { --badge-color: #a987ff; }
+.type-dark { --badge-color: #a58a78; }
+.type-fairy { --badge-color: #ee99ac; }
+.type-fighting { --badge-color: #f06d65; }
+.type-poison { --badge-color: #d879d8; }
+.type-ground { --badge-color: #e0c068; }
+.type-rock { --badge-color: #b8a038; }
+.type-bug { --badge-color: #a8b820; }
+.type-ghost { --badge-color: #a995cf; }
+.type-steel { --badge-color: #b8b8d0; }
+.type-flying { --badge-color: #a890f0; }
+.type-normal { --badge-color: #a8a878; }
+
+/* ============================================
+   COMPACT STATS
+   ============================================ */
+
+.summary-stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 3px;
+}
+
+.summary-stats > div {
+    min-width: 0;
+    padding: 4px 2px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.035);
+}
+
+.summary-stats span {
+    color: #64748b;
+    font-size: 0.48rem;
+    font-weight: 800;
+}
+
+.summary-stats strong {
+    color: var(--type-light);
+    font-size: 0.64rem;
+    font-weight: 800;
+}
+
+/* ============================================
+   CARD FOOTER
+   ============================================ */
+
+.summary-card-action {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding-top: 5px;
+
+    border-top: 1px solid rgba(148, 163, 184, 0.08);
+
+    color: #64748b;
+    font-size: 0.57rem;
+    font-weight: 650;
+}
+
+.summary-card-action span {
+    color: var(--type-light);
+    font-size: 0.75rem;
+}
+
+/* ============================================
+   EXPANDED DETAILS CARD
+   ============================================ */
+
+.details-card {
+    width: 100%;
+    overflow: hidden;
+
+    border: 1px solid color-mix(
+        in srgb,
+        var(--type-color) 35%,
+        transparent
+    );
+
+    border-radius: 13px;
+
+    background:
+        radial-gradient(
+            circle at 12% 45%,
+            color-mix(in srgb, var(--type-color) 9%, transparent),
+            transparent 38%
+        ),
+        linear-gradient(
+            145deg,
+            #111c32,
+            #020617
+        );
+
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
+
+    animation: expandCard 0.2s ease both;
+}
+
+@keyframes expandCard {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================
+   DETAILS HEADER
+   ============================================ */
+
+.details-card-header {
+    min-height: 48px;
+    padding: 7px 13px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+
+    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.details-card-header > div:first-child {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.details-card-header h3 {
+    margin: 0;
+
+    color: #f8fafc;
+
+    font-size: 0.95rem;
+    font-weight: 800;
+    text-transform: capitalize;
+}
+
+.details-card-actions {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.details-close-button {
+    width: 27px;
+    height: 27px;
+
+    border: 1px solid rgba(148, 163, 184, 0.15);
+    border-radius: 7px;
+
+    color: #cbd5e1;
+    background: rgba(255, 255, 255, 0.04);
+
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+.details-close-button:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* ============================================
+   DETAILS BODY
+   ============================================ */
+
+.details-card-body {
+    padding: 15px 20px;
+
+    display: grid;
+    grid-template-columns: 175px minmax(0, 1fr);
+    align-items: center;
+    gap: 22px;
+}
+
+.details-card-image {
+    width: 100%;
+    aspect-ratio: 1;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: rgba(255, 255, 255, 0.025);
+}
+
+.details-card-image img {
+    width: 95%;
+    height: 95%;
+    object-fit: contain;
+
+    filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.35));
+}
+
+.details-card-information {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* ============================================
+   ATTRIBUTES
+   ============================================ */
+
+.details-attributes {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 7px;
+}
+
+.details-attributes > div {
+    min-width: 0;
+    padding: 8px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    border: 1px solid rgba(148, 163, 184, 0.09);
+    border-radius: 7px;
+
+    background: rgba(255, 255, 255, 0.025);
+}
+
+.details-attributes span,
+.details-stat-item span {
+    color: #64748b;
+    font-size: 0.61rem;
+    font-weight: 650;
+}
+
+.details-attributes strong {
+    overflow: hidden;
+
+    color: #e2e8f0;
+    font-size: 0.72rem;
+    font-weight: 750;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-transform: capitalize;
+}
+
+/* ============================================
+   ALL BASE STATS
+   ============================================ */
+
+.details-stats-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.details-stats-heading strong {
+    color: #e2e8f0;
+    font-size: 0.76rem;
+}
+
+.details-stats-heading span {
+    color: var(--type-light);
+    font-size: 0.7rem;
+    font-weight: 750;
+}
+
+.details-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 6px;
+}
+
+.details-stat-item {
+    min-width: 0;
+    padding: 8px 4px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+
+    border: 1px solid rgba(148, 163, 184, 0.09);
+    border-radius: 7px;
+
+    background: rgba(255, 255, 255, 0.035);
+}
+
+.details-stat-item strong {
+    color: var(--type-light);
+    font-family: monospace;
+    font-size: 0.85rem;
+}
+
+/* ============================================
+   ABILITIES
+   ============================================ */
+
+.details-abilities {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.details-abilities > span {
+    color: #64748b;
+    font-size: 0.65rem;
+    font-weight: 750;
+}
+
+.details-abilities > div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.details-abilities > div span {
+    padding: 5px 9px;
+
+    border: 1px solid rgba(148, 163, 184, 0.1);
+    border-radius: 6px;
+
+    color: #cbd5e1;
+    background: rgba(255, 255, 255, 0.035);
+
+    font-size: 0.65rem;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 1100px) {
+    .details-stats-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 650px) {
+    .details-card-body {
+        grid-template-columns: 115px minmax(0, 1fr);
+        gap: 12px;
+        padding: 12px;
+    }
+
+    .details-attributes {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .details-attributes > div:last-child {
+        grid-column: 1 / -1;
+    }
+
+    .details-stat-item {
+        padding: 7px 3px;
+    }
+}
+
+@media (max-width: 440px) {
+    .summary-card {
+        min-height: 145px;
+        padding: 8px;
+    }
+
+    .summary-card-main {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2px;
+    }
+
+    .summary-card-image {
+        width: 57px;
+        height: 57px;
+        align-self: center;
+    }
+
+    .summary-card-information {
+        width: 100%;
+        gap: 5px;
+    }
+
+    .summary-card-information h3 {
+        text-align: center;
+        font-size: 0.76rem;
+    }
+
+    .favorite-type-list {
+        justify-content: center;
+    }
+
+    .summary-stats {
+        gap: 2px;
+    }
+
+    .summary-stats span {
+        font-size: 0.43rem;
+    }
+
+    .summary-stats strong {
+        font-size: 0.58rem;
+    }
+
+    .details-card-body {
+        grid-template-columns: 1fr;
+    }
+
+    .details-card-image {
+        width: 115px;
+        margin: 0 auto;
+    }
+
+    .details-stats-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .summary-card,
+    .summary-card-image img,
+    .details-card {
+        animation: none;
+        transition: none;
+    }
 }

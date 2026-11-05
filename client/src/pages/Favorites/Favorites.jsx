@@ -1,119 +1,118 @@
 
 import "./Favorites.css";
+
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { useFavorites } from "../../hooks/useFavorites.js";
 import { DetailsCard, SummaryCard } from "./DetailsCard.jsx";
 
-export default function Favorites() {
-    const favorites = useMemo(() => {
-        const storedFavorites = localStorage.getItem("favorites");
-        if (!storedFavorites) return [];
+function readFavorites() {
+    try {
+        const stored = JSON.parse(localStorage.getItem("favorites") || "[]");
+        return Array.isArray(stored) ? stored : [];
+    } catch {
+        return [];
+    }
+}
 
-        try {
-            const parsedFavorites = JSON.parse(storedFavorites);
-            return Array.isArray(parsedFavorites) ? parsedFavorites : [];
-        } catch (error) {
-            console.error("Unable to read favorites:", error);
-            return [];
+function getStatValue(pokemon, statName) {
+    const stat = pokemon?.stats?.find(item => item?.name === statName);
+    return Number(stat?.value ?? 0);
+}
+
+function getPropertyValues(pokemon, property) {
+    if (property === "species") {
+        const species = pokemon?.species;
+
+        if (typeof species === "string") return [species];
+
+        return species?.name ? [species.name] : [];
+    }
+
+    const values = pokemon?.[property] || [];
+
+    return values.map(item => {
+        if (typeof item === "string") return item;
+
+        if (property === "types") {
+            return item?.type?.name || item?.name;
         }
-    }, []);
+
+        if (property === "abilities") {
+            return item?.ability?.name || item?.name;
+        }
+
+        if (property === "moves") {
+            return item?.move?.name || item?.name;
+        }
+
+        return null;
+    }).filter(Boolean);
+}
+
+export default function Favorites() {
+    const { toggleFavorite } = useFavorites();
+
+    const [favorites, setFavorites] = useState(readFavorites);
 
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedFilter, setSelectedFilter] = useState("");
     const [selectedProperty, setSelectedProperty] = useState("");
-    const [sortBy, setSortBy] = useState("hp");
-    const [sortOrder, setSortOrder] = useState("desc");
+
+    const [sortBy, setSortBy] = useState("id");
+    const [sortOrder, setSortOrder] = useState("asc");
+
     const [expandedId, setExpandedId] = useState(null);
 
+    // Generate available filter values dynamically.
     const filterOptions = useMemo(() => {
-        const types = new Set();
-        const abilities = new Set();
-        const species = new Set();
-        const moves = new Set();
+        const options = {
+            types: new Set(),
+            abilities: new Set(),
+            species: new Set(),
+            moves: new Set()
+        };
 
-        favorites.forEach((pokemon) => {
-            (pokemon.types || []).forEach((type) => {
-                const name = typeof type === "string" ? type : type?.type?.name || type?.name;
-                if (name) types.add(name);
-            });
-
-            (pokemon.abilities || []).forEach((ability) => {
-                const name = typeof ability === "string" ? ability : ability?.ability?.name || ability?.name;
-                if (name) abilities.add(name);
-            });
-
-            if (typeof pokemon.species === "string") {
-                species.add(pokemon.species);
-            } else if (pokemon.species?.name) {
-                species.add(pokemon.species.name);
-            }
-
-            (pokemon.moves || []).forEach((move) => {
-                const name = typeof move === "string" ? move : move?.move?.name || move?.name;
-                if (name) moves.add(name);
+        favorites.forEach(pokemon => {
+            Object.keys(options).forEach(property => {
+                getPropertyValues(pokemon, property).forEach(value => {
+                    options[property].add(value);
+                });
             });
         });
 
-        return {
-            types: [...types].sort(),
-            abilities: [...abilities].sort(),
-            species: [...species].sort(),
-            moves: [...moves].sort(),
-        };
+        return Object.fromEntries(
+            Object.entries(options).map(([key, values]) => [
+                key,
+                [...values].sort()
+            ])
+        );
     }, [favorites]);
 
-    function getStatValue(pokemon, statName) {
-        if (!Array.isArray(pokemon?.stats)) return 0;
-        const stat = pokemon.stats.find((item) => item?.name === statName);
-        return Number(stat?.value ?? 0);
-    }
-
-    function getPropertyValues(pokemon, property) {
-        if (property === "species") {
-            const species = pokemon.species;
-            if (typeof species === "string") return [species];
-            return species?.name ? [species.name] : [];
-        }
-
-        const values = pokemon[property] || [];
-
-        return values.map((item) => {
-            if (typeof item === "string") return item;
-            if (property === "types") {
-                return item?.type?.name || item?.name || null;
-            }
-            if (property === "abilities") {
-                return item?.ability?.name || item?.name || null;
-            }
-            if (property === "moves") {
-                return item?.move?.name || item?.name || null;
-            }
-            return null;
-        }).filter(Boolean);
-    }
-
+    // Search, filter and sort.
     const appliedFavorites = useMemo(() => {
         let result = [...favorites];
 
         if (searchQuery.trim()) {
             const query = searchQuery.trim().toLowerCase();
 
-            result = result.filter((pokemon) =>
-                (pokemon?.name || "").toLowerCase().includes(query) ||
+            result = result.filter(pokemon =>
+                pokemon?.name?.toLowerCase().includes(query) ||
                 String(pokemon?.id ?? "").includes(query)
             );
         }
 
         if (selectedFilter && selectedProperty) {
-            result = result.filter((pokemon) =>
-                getPropertyValues(pokemon, selectedFilter).includes(selectedProperty)
+            result = result.filter(pokemon =>
+                getPropertyValues(pokemon, selectedFilter)
+                    .includes(selectedProperty)
             );
         }
 
         result.sort((a, b) => {
             if (sortBy === "name") {
-                const nameA = a?.name?.toLowerCase() || "";
-                const nameB = b?.name?.toLowerCase() || "";
+                const nameA = a?.name || "";
+                const nameB = b?.name || "";
 
                 return sortOrder === "asc"
                     ? nameA.localeCompare(nameB)
@@ -128,24 +127,41 @@ export default function Favorites() {
                 ? Number(b?.id ?? 0)
                 : getStatValue(b, sortBy);
 
-            return sortOrder === "asc" ? valueA - valueB : valueB - valueA;
+            return sortOrder === "asc"
+                ? valueA - valueB
+                : valueB - valueA;
         });
 
         return result;
-    }, [favorites, searchQuery, selectedFilter, selectedProperty, sortBy, sortOrder]);
+    }, [
+        favorites,
+        searchQuery,
+        selectedFilter,
+        selectedProperty,
+        sortBy,
+        sortOrder
+    ]);
+
+    // Remove a Pokémon from favorites.
+    function handleRemove(pokemon) {
+        toggleFavorite(pokemon);
+
+        setFavorites(previous =>
+            previous.filter(item => item.id !== pokemon.id)
+        );
+
+        if (expandedId === pokemon.id) {
+            setExpandedId(null);
+        }
+    }
 
     function resetFilters() {
         setSearchQuery("");
         setSelectedFilter("");
         setSelectedProperty("");
-        setSortBy("hp");
-        setSortOrder("desc");
+        setSortBy("id");
+        setSortOrder("asc");
         setExpandedId(null);
-    }
-
-    function handleFilterChange(event) {
-        setSelectedFilter(event.target.value);
-        setSelectedProperty("");
     }
 
     const hasActiveFilters =
@@ -154,37 +170,43 @@ export default function Favorites() {
         selectedProperty !== "";
 
     return (
-        <main className="favorites-wrapper">
-            <section className="favorites-hero">
-                <div className="hero-decoration hero-dot-one"></div>
-                <div className="hero-decoration hero-dot-two"></div>
-                <div className="hero-pokeball"></div>
+        <main className="favorites-page">
 
-                <div className="favorites-title">
-                    <span className="favorites-eyebrow">POKÉDEX • COLLECTION</span>
-                    <h1>My Favorite Pokémon</h1>
-                    <p>Your personal collection of Pokémon, ready to explore.</p>
+            {/* HEADER */}
+            <header className="favorites-header">
+                <div className="favorites-heading">
+                    <span className="favorites-eyebrow">
+                        POKÉDEX / COLLECTION
+                    </span>
+
+                    <h1>
+                        My Favorites
+                        <span>{favorites.length}</span>
+                    </h1>
                 </div>
 
-                <div className="favorites-count-card">
-                    <span className="count-number">{favorites.length}</span>
-                    <span className="count-label">FAVORITES</span>
-                </div>
-            </section>
+                <Link to="/" className="favorites-home-link">
+                    ← Back to Pokédex
+                </Link>
+            </header>
 
-            <section className="favorites-controls">
+            {/* TOOLBAR */}
+            <section className="favorites-toolbar">
+
                 <div className="favorites-search">
-                    <span className="search-icon">⌕</span>
+                    <span>⌕</span>
+
                     <input
                         type="text"
                         value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        placeholder="Search Pokémon by name or number..."
-                        aria-label="Search Pokémon"
+                        onChange={e => setSearchQuery(e.target.value)}
+                        placeholder="Search by name or number..."
+                        aria-label="Search favorites"
                     />
+
                     {searchQuery && (
                         <button
-                            className="clear-search"
+                            type="button"
                             onClick={() => setSearchQuery("")}
                             aria-label="Clear search"
                         >
@@ -193,159 +215,154 @@ export default function Favorites() {
                     )}
                 </div>
 
-                <div className="filter-group">
-                    <div className="control-label">FILTER</div>
-                    <div className="select-row">
-                        <div className="select-wrapper">
-                            <select value={selectedFilter} onChange={handleFilterChange}>
-                                <option value="">Filter by...</option>
-                                <option value="types">Type</option>
-                                <option value="moves">Move</option>
-                                <option value="abilities">Ability</option>
-                                <option value="species">Species</option>
-                            </select>
-                        </div>
+                <div className="favorites-select-group">
 
-                        {selectedFilter && (
-                            <div className="select-wrapper property-select">
-                                <select
-                                    value={selectedProperty}
-                                    onChange={(e) => setSelectedProperty(e.target.value)}
-                                >
-                                    <option value="">Select {selectedFilter}</option>
-                                    {filterOptions[selectedFilter]?.map((property) => (
-                                        <option key={property} value={property}>
-                                            {property}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-                        )}
-                    </div>
-                </div>
+                    <select
+                        value={selectedFilter}
+                        onChange={e => {
+                            setSelectedFilter(e.target.value);
+                            setSelectedProperty("");
+                        }}
+                        aria-label="Filter category"
+                    >
+                        <option value="">All categories</option>
+                        <option value="types">Type</option>
+                        <option value="abilities">Ability</option>
+                        <option value="species">Species</option>
+                        <option value="moves">Move</option>
+                    </select>
 
-                <div className="sort-group">
-                    <div className="control-label">SORT BY</div>
-                    <div className="select-row">
-                        <div className="select-wrapper">
-                            <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-                                <option value="name">Name</option>
-                                <option value="id">Pokédex Number</option>
-                                <option value="hp">HP</option>
-                                <option value="attack">Attack</option>
-                                <option value="defense">Defense</option>
-                                <option value="special-attack">Special Attack</option>
-                                <option value="special-defense">Special Defense</option>
-                                <option value="speed">Speed</option>
-                            </select>
-                        </div>
-
-                        <button
-                            className="sort-direction"
-                            onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
-                            title={sortOrder === "asc" ? "Ascending" : "Descending"}
+                    {selectedFilter && (
+                        <select
+                            value={selectedProperty}
+                            onChange={e => setSelectedProperty(e.target.value)}
+                            aria-label="Filter value"
                         >
-                            {sortOrder === "asc" ? "↑" : "↓"}
-                        </button>
-                    </div>
-                </div>
+                            <option value="">All values</option>
 
-                <button
-                    className={`reset-button ${hasActiveFilters ? "active" : ""}`}
-                    onClick={resetFilters}
-                >
-                    <span>↻</span> Reset
-                </button>
-
-                <Link className="back-home-button" to="/">
-                    Back to Home
-                </Link>
-            </section>
-
-            {hasActiveFilters && (
-                <div className="active-filter-bar">
-                    <div className="active-filter-status">
-                        <span className="status-dot"></span>
-                        <span>Filters active</span>
-                    </div>
-
-                    {searchQuery && (
-                        <span className="filter-chip">
-                            Search: <strong>"{searchQuery}"</strong>
-                        </span>
+                            {filterOptions[selectedFilter]?.map(value => (
+                                <option key={value} value={value}>
+                                    {value}
+                                </option>
+                            ))}
+                        </select>
                     )}
 
-                    {selectedProperty && (
-                        <span className="filter-chip">
-                            {selectedFilter}: <strong>{selectedProperty}</strong>
-                        </span>
-                    )}
-                </div>
-            )}
+                    <select
+                        value={sortBy}
+                        onChange={e => setSortBy(e.target.value)}
+                        aria-label="Sort favorites"
+                    >
+                        <option value="id">Pokédex Number</option>
+                        <option value="name">Name</option>
+                        <option value="hp">HP</option>
+                        <option value="attack">Attack</option>
+                        <option value="defense">Defense</option>
+                        <option value="special-attack">Special Attack</option>
+                        <option value="special-defense">Special Defense</option>
+                        <option value="speed">Speed</option>
+                    </select>
 
-            <section className="favorites-results-header">
-                <div>
-                    <span className="results-eyebrow">YOUR COLLECTION</span>
-                    <h2>Pokémon</h2>
+                    <button
+                        type="button"
+                        className="sort-direction"
+                        onClick={() =>
+                            setSortOrder(previous =>
+                                previous === "asc" ? "desc" : "asc"
+                            )
+                        }
+                        title={sortOrder === "asc" ? "Ascending" : "Descending"}
+                        aria-label="Change sort direction"
+                    >
+                        {sortOrder === "asc" ? "↑" : "↓"}
+                    </button>
                 </div>
 
-                <div className="results-count">
-                    <strong>{appliedFavorites.length}</strong>
-                    <span>{appliedFavorites.length === 1 ? "favorite" : "favorites"}</span>
-                </div>
+                {hasActiveFilters && (
+                    <button
+                        type="button"
+                        className="reset-filters"
+                        onClick={resetFilters}
+                    >
+                        Reset
+                    </button>
+                )}
             </section>
 
-            <section className="favorites-body">
+            {/* RESULTS INFORMATION */}
+            <div className="favorites-results-info">
+                <span>
+                    <strong>{appliedFavorites.length}</strong> Pokémon found
+                </span>
+
+                <span>
+                    {expandedId !== null
+                        ? "One Pokémon expanded"
+                        : "Select a card to view details"}
+                </span>
+            </div>
+
+            {/* POKEMON GRID */}
+            <section className="favorites-grid">
+
                 {appliedFavorites.length > 0 ? (
-                    appliedFavorites.map((pokemon, index) => (
+                    appliedFavorites.map(pokemon => (
                         <div
                             key={pokemon.id}
-                            className={`favorite-card-wrapper ${expandedId === pokemon.id ? "expanded" : ""}`}
-                            style={{ "--card-index": index }}
+                            className={`favorite-card-wrapper ${
+                                expandedId === pokemon.id ? "expanded" : ""
+                            }`}
                         >
                             {expandedId === pokemon.id ? (
                                 <DetailsCard
                                     pokemon={pokemon}
                                     onExpand={() => setExpandedId(null)}
+                                    onRemove={() => handleRemove(pokemon)}
                                 />
                             ) : (
                                 <SummaryCard
                                     pokemon={pokemon}
                                     onExpand={() => setExpandedId(pokemon.id)}
+                                    onRemove={() => handleRemove(pokemon)}
                                 />
                             )}
                         </div>
                     ))
                 ) : (
                     <div className="favorites-empty">
-                        <div className="empty-pokeball">
-                            <div className="empty-pokeball-line"></div>
-                            <div className="empty-pokeball-center"></div>
-                        </div>
+                        <span>♡</span>
 
-                        <h3>No Pokémon found</h3>
+                        <h2>
+                            {favorites.length === 0
+                                ? "No favorites yet"
+                                : "No Pokémon found"}
+                        </h2>
+
                         <p>
                             {favorites.length === 0
-                                ? "Your favorite Pokémon will appear here."
+                                ? "Add Pokémon to your favorites to build your collection."
                                 : "Try changing your search or filters."}
                         </p>
 
                         {hasActiveFilters && (
-                            <button className="empty-reset-button" onClick={resetFilters}>
-                                Clear Filters
+                            <button
+                                type="button"
+                                onClick={resetFilters}
+                            >
+                                Clear filters
                             </button>
+                        )}
+
+                        {favorites.length === 0 && (
+                            <Link to="/">
+                                Explore Pokémon
+                            </Link>
                         )}
                     </div>
                 )}
+
             </section>
 
-            <footer className="favorites-footer">
-                <div className="footer-decoration"></div>
-                <span>
-                    Showing <strong>{appliedFavorites.length}</strong> of{" "}
-                    <strong>{favorites.length}</strong> Favorites
-                </span>
-            </footer>
         </main>
     );
 }

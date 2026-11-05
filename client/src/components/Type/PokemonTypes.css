@@ -1,0 +1,190 @@
+
+.type-effectiveness {
+    width: 100%;
+    margin: 0;
+    padding: 17px;
+    box-sizing: border-box;
+    color: #f5f5f5;
+    background: linear-gradient(145deg, #151515, #101010);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 15px;
+}
+
+.type-effectiveness * {
+    box-sizing: border-box;
+}
+
+.type-effectiveness-eyebrow {
+    display: block;
+    margin-bottom: 5px;
+    color: #ff914d;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.type-effectiveness h2 {
+    margin: 0 0 12px;
+    font-size: 20px;
+    font-weight: 750;
+}
+
+.type-effectiveness h3 {
+    margin: 0 0 7px;
+    font-size: 15px;
+}
+
+.type-effectiveness p {
+    line-height: 1.4;
+}
+
+.pokemon-type-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 14px;
+}
+
+.pokemon-type-badge {
+    padding: 5px 10px;
+    border: 1px solid rgba(255, 145, 77, 0.3);
+    border-radius: 20px;
+    background: rgba(255, 126, 53, 0.12);
+    color: #ffad73;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: capitalize;
+}
+
+.effectiveness-panel {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: 10px;
+}
+
+.defense,
+.attack {
+    min-width: 0;
+    padding: 13px;
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 12px;
+}
+
+.effectiveness-description {
+    margin: 0 0 12px;
+    color: #9999a3;
+    font-size: 11px;
+}
+
+.effectiveness-group {
+    min-width: 0;
+    margin-top: 13px;
+}
+
+.effectiveness-group:first-of-type {
+    margin-top: 0;
+}
+
+.effectiveness-label {
+    display: block;
+    margin-bottom: 7px;
+    color: #a7a7b0;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+}
+
+.effectiveness-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.effectiveness-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px 7px;
+    border: 1px solid #353535;
+    border-radius: 7px;
+    background: #252525;
+    color: #e5e5e5;
+    font-size: 10px;
+    font-weight: 650;
+    text-transform: capitalize;
+}
+
+.effectiveness-multiplier {
+    font-size: 10px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.is-weak {
+    color: #ff9992;
+    background: rgba(255, 76, 76, 0.09);
+    border-color: rgba(255, 76, 76, 0.24);
+}
+
+.is-resistant {
+    color: #83dba1;
+    background: rgba(58, 190, 112, 0.09);
+    border-color: rgba(58, 190, 112, 0.24);
+}
+
+.is-immune {
+    color: #c0adff;
+    background: rgba(151, 113, 255, 0.10);
+    border-color: rgba(151, 113, 255, 0.25);
+}
+
+.effectiveness-empty {
+    margin: 0;
+    color: #777780;
+    font-size: 11px;
+}
+
+.attack-type-group {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.attack-type-group:first-of-type {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+}
+
+.effectiveness-status {
+    margin: 8px 0;
+    color: #a7a7b0;
+    font-size: 11px;
+}
+
+.effectiveness-error {
+    color: #ff8c82;
+}
+
+@media (max-width: 600px) {
+    .effectiveness-panel {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .effectiveness-chip {
+        transition: none;
+    }
+}
+/* Defense tab only */
+.type-effectiveness[data-mode="defense"] .attack {
+    display: none;
+}
+
+.type-effectiveness[data-mode="defense"] .effectiveness-panel {
+    grid-template-columns: 1fr;
+}

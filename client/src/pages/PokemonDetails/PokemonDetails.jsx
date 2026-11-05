@@ -1,56 +1,37 @@
 import {useParams} from "react-router-dom";
-import axios from "axios";
 import {useEffect, useState} from "react";
 import './PokemonDetails.css';
 import PokemonInfo from "./PokemonInfo.jsx";
+import IfExists from "../../services/pokemonService.js";
 
 function PokemonDetails(){
-    let id = useParams().id;
-    console.log(id);
-    const [pokemonList, setPokemonList] = useState({
-        pokemon: null,
-        currId: Number(id),
-    })
-    let url = `https://pokeapi.co/api/v2/pokemon/${pokemonList.currId}`;
-
-    async function downloadPokemon(){
-        const response = await axios.get(url);
-        console.log(response.data);
-        setPokemonList((state) => ({
-            ...state,
-            pokemon:{
-                name: response.data.name,
-                image: response.data.sprites.other['official-artwork'].front_default,
-                height: response.data.height,
-                weight: response.data.weight,
-                types: response.data.types.map((t) => t.type.name),
-                moves: response.data.moves.map((m) => m.move.name),
-                abilities: response.data.abilities.map((a) => a.ability.name),
-                stats: response.data.stats.map((s) => ({name: s.stat.name, value: s.base_stat})),
-                species: response.data.species.name,
-                id: pokemonList.currId
-            }
-        }))
-    }
+    const {id} = useParams();
+    const [pokemon, setPokemon] = useState(null);
+    const [loading, setLoading] = useState(true);
     
     useEffect(() => {
-        downloadPokemon();
-    },[pokemonList.currId]);
-    console.log("PokemonDetails current Pokemon: ", pokemonList.pokemon);
-    return <>
-    {pokemonList.pokemon === null ? <div className="Loading">Loading</div>:
-        <PokemonInfo pokemon = {pokemonList.pokemon}/>}
-
-    <div className = "pagination-wrapper">
-        <button disabled = {id < 2} onClick = {() => setPokemonList((state) => ({
-            ...state,
-            currId: Number(pokemonList.currId)-1,
-        }))}>Prev</button>
-        <button onClick = {() => setPokemonList((state) => ({
-            ...state,
-            currId: Number(pokemonList.currId)+1,
-        }))}>Next</button>
-    </div>
-    </>
+        let cancel = false;
+        async function fetchPokemon(){
+            setLoading(true);
+            setPokemon(null);
+            try{
+                const data = await IfExists({id: (Number)(id)})
+                if(!cancel) setPokemon(data);
+            }
+            catch(error){
+                console.error(error);
+            }finally{
+                if(!cancel) setLoading(false);
+            }
+        }
+            fetchPokemon();
+            return () => {
+                cancel = true;
+            }
+    },[id]);
+    if(loading) return <div className="Loading">Loading Pokemon</div>
+    if(!pokemon) return <div>Pokemon not found!</div>
+    
+    return <PokemonInfo pokemon = {pokemon}/>
 }
 export default PokemonDetails;
