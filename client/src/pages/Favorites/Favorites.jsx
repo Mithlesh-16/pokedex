@@ -1,4 +1,3 @@
-
 import "./Favorites.css";
 
 import { useMemo, useState } from "react";

@@ -1,4 +1,3 @@
-
 import { FaHeart } from "react-icons/fa";
 import "./DetailsCard.css";
 
